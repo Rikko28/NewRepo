@@ -46,9 +46,8 @@ public class ConsoleOutputServiceTests
         _service.ShowResult(result);
 
         // Assert
-        Assert.Equal(2, _output.Count);
-        Assert.Equal("100.00 EUR = 112.1900 USD", _output[0]);
-        Assert.Equal("", _output[1]);
+        Assert.Single(_output);
+        Assert.Equal("112.1900", _output[0]);
     }
 
     [Fact]
@@ -62,9 +61,8 @@ public class ConsoleOutputServiceTests
         serviceWithMock.ShowResult(result);
 
         // Assert
-        _writeLineMock.Verify(w => w(It.IsAny<string>()), Times.Exactly(2));
-        _writeLineMock.Verify(w => w("100.00 EUR = 112.1900 USD"), Times.Once);
-        _writeLineMock.Verify(w => w(""), Times.Once);
+        _writeLineMock.Verify(w => w(It.IsAny<string>()), Times.Once);
+        _writeLineMock.Verify(w => w("112.1900"), Times.Once);
     }
 
     [Fact]
@@ -77,9 +75,8 @@ public class ConsoleOutputServiceTests
         _service.ShowResult(result);
 
         // Assert
-        Assert.Equal(2, _output.Count);
+        Assert.Single(_output);
         Assert.Equal("Error: Invalid command format", _output[0]);
-        Assert.Equal("", _output[1]);
     }
 
     [Fact]
@@ -93,9 +90,8 @@ public class ConsoleOutputServiceTests
         serviceWithMock.ShowResult(result);
 
         // Assert
-        _writeLineMock.Verify(w => w(It.IsAny<string>()), Times.Exactly(2));
+        _writeLineMock.Verify(w => w(It.IsAny<string>()), Times.Once);
         _writeLineMock.Verify(w => w("Error: Invalid command format"), Times.Once);
-        _writeLineMock.Verify(w => w(""), Times.Once);
     }
 
     [Fact]
@@ -126,7 +122,7 @@ public class ConsoleOutputServiceTests
         serviceWithMock.ShowResult(result);
 
         // Assert
-        _writeLineMock.Verify(w => w(It.IsAny<string>()), Times.Exactly(12));
+        _writeLineMock.Verify(w => w(It.IsAny<string>()), Times.Exactly(11));
         _writeLineMock.Verify(w => w("Error: Currency 'XYZ' is not supported."), Times.Once);
         _writeLineMock.Verify(w => w("Supported currencies:"), Times.Once);
     }
@@ -147,9 +143,9 @@ public class ConsoleOutputServiceTests
     }
 
     [Theory]
-    [InlineData(50.25, "GBP", 428.56, "DKK", "50.25 GBP = 428.5600 DKK")]
-    [InlineData(1000, "JPY", 59.38, "EUR", "1000.00 JPY = 59.3800 EUR")]
-    [InlineData(0.5, "CHF", 0.43, "USD", "0.50 CHF = 0.4300 USD")]
+    [InlineData(50.25, "GBP", 428.56, "DKK", "428.5600")]
+    [InlineData(1000, "JPY", 59.38, "EUR", "59.3800")]
+    [InlineData(0.5, "CHF", 0.43, "USD", "0.4300")]
     public void ShowResult_WithVariousSuccessResults_FormatsCorrectly(
         decimal originalAmount,
         string mainCurrency,
@@ -164,7 +160,7 @@ public class ConsoleOutputServiceTests
         _service.ShowResult(result);
 
         // Assert
-        Assert.Equal(2, _output.Count);
+        Assert.Single(_output);
         Assert.Equal(expectedOutput, _output[0]);
     }
 }

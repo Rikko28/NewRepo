@@ -198,6 +198,6 @@ public class ExchangeApplicationTests
 
         // Assert
         Assert.Contains("Usage: Exchange <currency_pair> <amount>", output);
-        Assert.Contains(output, line => line.Contains("EUR") && line.Contains("USD"));
+        Assert.Contains("112.1895", output);
     }
 }
